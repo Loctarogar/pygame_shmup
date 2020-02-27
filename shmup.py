@@ -112,6 +112,17 @@ while running:
     # Update
     all_sprites.update()
     
+    # check to see if a bullet hit mob
+    # True means that every mob that is hitted 
+    # will be deleted and next True means that 
+    # bullet will be deleted
+    hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
+    
+    # add killed mobs
+    for hit in hits:
+        m = Mob()
+        all_sprites.add(m)
+        mobs.add(m)
     # check to see if a mob hit the player
     # False indicate is thing you hit should 
     # be deleted or not
