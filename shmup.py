@@ -42,9 +42,34 @@ class Player(pygame.sprite.Sprite):
             self.rect.right = WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
+            
+class Mob(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((30, 40))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randrange(WIDTH - self.rect.width)
+        self.rect.y = random.randrange(-100, -30)
+        self.speedy = random.randrange(1, 5)
+        self.speedx = random.randrange(-2, 2)
+        
+    def update(self):
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+        if self.rect.top > HEIGHT + 10 or self.rect.x + 30 < 0 or self.rect.x > WIDTH:
+            self.rect.x = random.randrange(WIDTH - self.rect.width)
+            self.rect.y = random.randrange(-100, -30)
+            self.speedy = random.randrange(2, 5)
+        
 
 all_sprites = pygame.sprite.Group()
 player = Player()
+mobs = pygame.sprite.Group()
+for i in range(8):
+    m = Mob()
+    all_sprites.add(m)
+    mobs.add(m)
 all_sprites.add(player)
 
 # Game loop
