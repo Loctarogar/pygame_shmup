@@ -85,6 +85,15 @@ while running:
 
     # Update
     all_sprites.update()
+    
+    # check to see if a mob hit the player
+    # False indicate is thing you hit should 
+    # be deleted or not
+    hits = pygame.sprite.spritecollide(player, mobs, False)
+    # empty list evaluates to False
+    if hits:
+        running = False
+        
 
     # Draw / render
     screen.fill(BLACK)
