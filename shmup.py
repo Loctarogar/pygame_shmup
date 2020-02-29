@@ -36,6 +36,10 @@ class Player(pygame.sprite.Sprite):
         # to make image background transparent
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
+        # set radius for sicular collision
+        self.radius = 20
+        # draw radius to see is it feets
+        # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.centerx = WIDTH/2
         self.rect.bottom = HEIGHT - 10
         self.speedx = 0
@@ -64,6 +68,10 @@ class Mob(pygame.sprite.Sprite):
         self.image = meteor_img
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
+        # set radius for sicular collision
+        self.radius = int(self.rect.width * 0.85 / 2)
+        # draw radius to see is it feets
+        # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = random.randrange(WIDTH - self.rect.width)
         self.rect.y = random.randrange(-100, -30)
         self.speedy = random.randrange(1, 5)
@@ -141,7 +149,10 @@ while running:
     # check to see if a mob hit the player
     # False indicate is thing you hit should 
     # be deleted or not
-    hits = pygame.sprite.spritecollide(player, mobs, False)
+    # rectangular collision
+    # hits = pygame.sprite.spritecollide(player, mobs, False)
+    # circlular collision
+    hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
     # empty list evaluates to False
     if hits:
         running = False
