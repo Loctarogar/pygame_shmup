@@ -1,6 +1,10 @@
 # Pygame template - skeleton for a new pygame project
 import pygame
 import random
+from os import path
+
+img_dir = path.join(path.dirname(__file__), 'data/img')
+
 
 WIDTH = 480
 HEIGHT = 600
@@ -84,6 +88,9 @@ class Bullet(pygame.sprite.Sprite):
         if self.rect.bottom < 0:
             self.kill()
             
+# Load all game graphics
+background = pygame.image.load(path.join(img_dir, 'background.png')).convert()
+background_rect = background.get_rect()
 
 all_sprites = pygame.sprite.Group()
 player = Player()
@@ -123,6 +130,7 @@ while running:
         m = Mob()
         all_sprites.add(m)
         mobs.add(m)
+        
     # check to see if a mob hit the player
     # False indicate is thing you hit should 
     # be deleted or not
@@ -133,8 +141,13 @@ while running:
         
 
     # Draw / render
+    # filling screen with black
     screen.fill(BLACK)
+    # setting background
+    screen.blit(background, background_rect)
+    
     all_sprites.draw(screen)
+    
     # *after* drawing everything, flip the display
     pygame.display.flip()
 
