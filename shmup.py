@@ -65,8 +65,11 @@ class Player(pygame.sprite.Sprite):
 class Mob(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = meteor_img
-        self.image.set_colorkey(BLACK)
+        # original image
+        self.image_orig = meteor_img
+        self.image_orig.set_colorkey(BLACK)
+        # copied image
+        self.image = self.image_orig.copy()
         self.rect = self.image.get_rect()
         # set radius for sicular collision
         self.radius = int(self.rect.width * 0.85 / 2)
@@ -76,8 +79,24 @@ class Mob(pygame.sprite.Sprite):
         self.rect.y = random.randrange(-100, -30)
         self.speedy = random.randrange(1, 5)
         self.speedx = random.randrange(-2, 2)
+        self.rotation = 0
+        self.rotation_speed = random.randrange(-8, 8)
+        self.last_update = pygame.time.get_ticks()
         
+    def rotate(self):
+        now = pygame.time.get_ticks()
+        # get_ticks() gives time in miliseconds
+        if now - self.last_update > 50:
+            self.last_update = now
+            self.rotation = (self.rotation + self.rotation_speed) % 360
+            new_image = pygame.transform.rotate(self.image_orig, self.rotation)
+            old_center = self.rect.center
+            self.image = new_image
+            self.rect = self.image.get_rect()
+            self.rect.center = old_center
+    
     def update(self):
+        self.rotate()
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         if self.rect.top > HEIGHT + 10 or self.rect.x + 30 < 0 or self.rect.x > WIDTH:
@@ -140,14 +159,14 @@ while running:
     # bullet will be deleted
     hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
     
-    # add killed mobs
+    # create new mobs if killed
     for hit in hits:
         m = Mob()
         all_sprites.add(m)
         mobs.add(m)
         
     # check to see if a mob hit the player
-    # False indicate is thing you hit should 
+    # False indicate that thing you hit should 
     # be deleted or not
     # rectangular collision
     # hits = pygame.sprite.spritecollide(player, mobs, False)
