@@ -25,6 +25,16 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Shmup!")
 clock = pygame.time.Clock()
 
+# pygame choose font on computer
+font_name = pygame.font.match_font('arial')
+
+def draw_text(surf, text, size, x, y):
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, WHITE)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x, y)
+    surf.blit(text_surface, text_rect)
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -136,6 +146,8 @@ for i in range(8):
     mobs.add(m)
 all_sprites.add(player)
 
+score = 0
+
 # Game loop
 running = True
 while running:
@@ -161,6 +173,7 @@ while running:
     
     # create new mobs if killed
     for hit in hits:
+        score += 50 - hit.radius
         m = Mob()
         all_sprites.add(m)
         mobs.add(m)
@@ -184,6 +197,8 @@ while running:
     screen.blit(background, background_rect)
     
     all_sprites.draw(screen)
+    
+    draw_text(screen, str(score), 18, WIDTH / 2, 10)
     
     # *after* drawing everything, flip the display
     pygame.display.flip()
